@@ -1,11 +1,72 @@
-/* 
 
-    You can write your own styles here...
-    
-    
-    ...Or you can use the import command to include 
-    other sylesheets into your bunde as well, e.j:
-    
-    import 'relative/path/to/stylesheet.scss';
+html, body {
+    margin: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    background-color: #465e7a;
+}
 
-*/
+h1 {
+    margin: 20px;
+    font-family: "pacifico", cursive;
+    font-size: 40px
+}
+
+/* me ocultara el icono de basurero por defecrto */
+.eliminar-btn {
+    visibility: hidden;
+    transition: visibility 0.2s;
+}
+
+/* aqui si me mostrara el icono de basurero cuando pase el cursor por la tarea */
+.tarea-item:hover .eliminar-btn {
+    visibility: visible;
+}
+
+footer {
+    padding: 10px;
+    text-align: center;
+    font-family: "pacifico", cursive;
+    /* position: fixed;
+    width: 100%;
+    bottom: 0;
+    box-shadow: black;
+     */
+}
+
+
+.tarea-item {
+    animation: fadeInSlide 0.3s ease-in-out;
+    transition: background-color 0.3s;
+}
+
+.tarea-item:hover {
+    background-color: #e7f1ff;
+}
+
+
+.tarea-item:hover .eliminar-btn {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.container {
+    background-color: rgb(144, 183, 234);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 100%;
+    height: 90%; /* Fija el alto del contenedor */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.content {
+    flex-grow: 1;
+    overflow-y: auto; /* Permite scroll si las tareas exceden el espacio */
+}
