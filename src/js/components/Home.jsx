@@ -38,7 +38,7 @@ const Home = () => {
 				console.log("Tareas obtenidas:", data.todos);
 				// Solo tomamos el texto de cada tarea
 				const tareasTexto = data.todos.map((item) => item.label);
-				setTareas(tareasTexto); //esto me guardara los textos de mi tarea
+				setTareas(data.todos); //esto me guardara los textos de mi tarea
 			})
 			.catch((error) => {
 				console.error("Error al obtener tareas:", error);
@@ -74,19 +74,23 @@ const Home = () => {
 			if (inputValue.trim() === "") return;
 
 			//aqui agregamos la tarera a la Api
-			const nuevaTarea = { label: inputValue, done: false };
+			// const nuevaTarea = { label: inputValue, done: false };
 			const nuevasTareas = [...tareas, inputValue];
 
-			fetch(API_URL, {
-				method: "PUT",
-				body: JSON.stringify(nuevasTareas.map((tarea) => ({ label: tarea, done: false }))),
+			fetch("https://playground.4geeks.com/todo/todos/jenni", {
+				method: "POST",
+				body: JSON.stringify({
+					"label": inputValue,
+					"is_done": false
+				}),
 				headers: {
 					"Content-Type": "application/json",
 				},
 			})
 				.then((resp) => {
 					if (resp.ok) {
-						setTareas(nuevasTareas);
+						// setTareas(nuevasTareas);
+						obtenerTareas()
 						setInputValue("");
 					} else {
 						throw new Error("No se pudo agregar la tarea.");
@@ -107,11 +111,26 @@ const Home = () => {
 
 	//esta funcion me ayudara a eliminar la tarea manualmente
 	const eliminarTarea = (index) => {
+
 		const nuevasTareas = tareas.filter((_, i) => i !== index);
 
-	}
+		//aqui me ayudara actualizar las tareas en la API
+		fetch(`https://playground.4geeks.com/todo/todos/${index}`, {
+			method: "DELETE",
 
-
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((resp) => {
+				if (resp.ok) {
+					obtenerTareas()
+				} else {
+					throw new Error("No se pudo eliminar la tarea.");
+				}
+			})
+			.catch((error) => console.error("Error al eliminar tarea:", error));
+	};
 
 
 	return (
@@ -140,9 +159,9 @@ const Home = () => {
 					{tareas.map((tarea, index) => (
 						<li key={index} className="list-group-item d-flex justify-content-between align-items-center tarea-item">
 
-							{tarea}
+							{tarea.label}
 							{/* aqui se mostrara el boton de eliminar */}
-							< button className="btn btn-danger btn-sm eliminar-btn" onClick={() => eliminarTarea(index)}>
+							< button className="btn btn-danger btn-sm eliminar-btn" onClick={() => eliminarTarea(tarea.id)}>
 								{/* aqui se mostrara el icono de papelera */}
 								<TrashIcon size={24} />
 							</button>
